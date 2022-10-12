@@ -163,32 +163,6 @@ def depthFirstSearch(problem):
     return []
 
 
-def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    node = getStartNode(problem)
-    def fn_total_cost_for_node(a_node): return a_node['PATH-COST']
-
-    frontier = util.PriorityQueueWithFunction(fn_total_cost_for_node)
-
-    frontier.push(node)
-
-    explored = set()
-
-    while not frontier.isEmpty():
-        node = frontier.pop()
-        if problem.isGoalState(node["STATE"]):
-            return getActionSequence(node)
-
-        if node['STATE'] not in explored:
-            explored.add(node['STATE'])
-            successors = problem.getSuccessors(node['STATE'])
-            for sucessor in successors:
-                child_node = getChildNode(successors, node)
-                frontier.push(child_node)
-
-    return None
-
-
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -256,40 +230,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     return []
 
 
-def greadySearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
-    node = getStartNode(problem)
-
-    def fn_total_cost_for_node(a_node):
-        return heuristic(a_node['STATE'], problem=problem)
-
-    frontier = util.PriorityQueueWithFunction(fn_total_cost_for_node)
-    frontier.push(node)
-    explored = set()
-
-    while not frontier.isEmpty():
-        node = frontier.pop()
-
-        if node['STATE'] in explored:
-            continue
-
-        explored.add(node['STATE'])
-
-        if problem.isGoalState(node['STATE']):
-            return getActionSequence(node)
-
-        successors = problem.expand(node['STATE'])
-
-        for sucessor in successors:
-            child_node = getChildNode(sucessor, node)
-            frontier.push(child_node)
-
-    return []
-
 
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
-gready = greadySearch
-def ucs(problem): return aStarSearch(problem, nullHeuristic)

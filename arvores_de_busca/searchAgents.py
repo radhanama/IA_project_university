@@ -41,7 +41,6 @@ import util
 from util import manhattanDistance
 import time
 import search
-import functools
 
 
 class GoWestAgent(Agent):
@@ -335,8 +334,6 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        self.game_state = startingGameState
-
         self.startState = (self.startingPosition, self.corners)
 
     def getStartState(self):
@@ -349,8 +346,6 @@ class CornersProblem(search.SearchProblem):
 
     def isGoalState(self, state):
         """
-        -: Função teste de objetivo.
-
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
@@ -383,9 +378,6 @@ class CornersProblem(search.SearchProblem):
         return children
 
     def getActions(self, state):
-        """
-        -: Função **ACTIONS(s)** que produz as ações possíveis em cada estado.
-        """
         possible_directions = [Directions.NORTH,
                                Directions.SOUTH, Directions.EAST, Directions.WEST]
         valid_actions_from_state = []
@@ -395,7 +387,6 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 valid_actions_from_state.append(action)
-
         return valid_actions_from_state
 
     def getActionCost(self, state, action, next_state):
@@ -404,11 +395,6 @@ class CornersProblem(search.SearchProblem):
         return 1
 
     def getNextState(self, state, action):
-        """
-        -: Função **RESULT(s,a)** chamada de *modelo de transição ou
-           função de transição*, que retorna o próximo estado dado
-           como parametro um *estado e uma ação*.
-        """
         assert action in self.getActions(state), (
             "Invalid action passed to getActionCost().")
         x, y = state[0]
@@ -427,8 +413,6 @@ class CornersProblem(search.SearchProblem):
 
     def getCostOfActionSequence(self, actions):
         """
-        -: Função de custo de caminho
-
         Returns the cost of a particular sequence of actions.  If those actions
         include an illegal move, return 999999.  This is implemented for you.
         """
@@ -620,6 +604,7 @@ def foodHeuristic(state, problem):
     
     return d1 + leftPoints
 
+
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
 
@@ -655,6 +640,7 @@ class ClosestDotSearchAgent(SearchAgent):
         print("Food Num:{0}".format(food.count()))
         return search.aStarSearch(problem)
 
+
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
     A search problem for finding a path to any food.
@@ -688,10 +674,6 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x, y = state
         return self.food[x][y]
-
-        "*** YOUR CODE HERE ***"
-        # util.raiseNotDefined()
-        
 
 
 def mazeDistance(point1, point2, gameState):
