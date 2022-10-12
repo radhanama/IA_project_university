@@ -322,43 +322,32 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-
-    # variáveis a serem usadas na cálculo da função de avaliação
-    score = scoreEvaluationFunction(currentGameState)
+    #Calculando a distância até o pellet de alimentos mais próximo
     newPos = currentGameState.getPacmanPosition()
-    ghost_positions = currentGameState.getGhostPositions()
+    newFood = currentGameState.getFood()
+    newFoodList = newFood.asList()
+    min_food_distance = -1
+    for food in newFoodList:
+        distance = util.manhattanDistance(newPos, food)
+        if min_food_distance >= distance or min_food_distance == -1:
+            min_food_distance = distance
 
-    newFoodList = currentGameState.getFood().asList()
-    food_count = len(newFoodList)
-    closest_food = 1
+    #Calculando as distâncias do pacman aos fantasmas. Além disso, verificando a proximidade dos fantasmas (a uma distância de 1) ao redor do pacman.
+    distances_to_ghosts = 1
+    proximity_to_ghosts = 0
+    for ghost_state in currentGameState.getGhostPositions():
+        distance = util.manhattanDistance(newPos, ghost_state)
+        distances_to_ghosts += distance
+        if distance <= 1:
+            proximity_to_ghosts += 1
 
+    #Obtenção do número de cápsulas disponíveis
+    newCapsule = currentGameState.getCapsules()
+    numberOfCapsules = len(newCapsule)
 
-    # distancia de todas as comidas
-    food_distances = [manhattanDistance(newPos, food_position) for food_position in newFoodList]
+    #Combinação das métricas calculadas acima.
+    return currentGameState.getScore() + (1 / float(min_food_distance)) - (1 / float(distances_to_ghosts)) - proximity_to_ghosts - numberOfCapsules
 
-    # calcular comida mais proxima
-    if food_count > 0:
-        closest_food = min(food_distances)
-
-    # distancia do pacman pros fantasmas
-    for ghost_position in ghost_positions:
-        ghost_distance = manhattanDistance(newPos, ghost_position)
-
-        # se o fantasma tiver proximo da a pontuação minima
-        if ghost_distance < 2:
-            return float("-inf")
-
-    # incentiva o agente a se aproximar mais da pílula mais próxima
-    score += 1.0/closest_food
-
-    # incentiva o agente a comer pílulas 
-    score -= 10 * len(newFoodList)
-
-    # incentiva o agente a se mover para príximo das cápsulas
-    capsulelocations = currentGameState.getCapsules()
-    score -= len(capsulelocations)
-
-    return score
 
 # Abbreviation
 better = betterEvaluationFunction
